@@ -40,7 +40,8 @@ n = list(set(names))
 # print names
 if sys.argv[-1] == '-n':
     n.sort()
-    print( "\n".join(n) )
+    for i in n:
+        print(f"({names.count(i)}) {i}")
 else:  # print count
     print( f"Sessions:   {len(sessions)}")
     print( f"Volunteers: {len(names)} slots, {len(n)} volunteers" )
