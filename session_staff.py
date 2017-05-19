@@ -87,7 +87,7 @@ class Session(object):
         if chair == runner:
             self.error = 1
             self.inc_errors()
-            print(f'error: {chair} is cannot be chair and runner in same session!', file=sys.stderr)
+            print(f'error {self.session}: {chair} is, but cannot be chair and runner in same session!', file=sys.stderr)
         self.chair = chair
         self.runner = runner
         #-----#
@@ -98,6 +98,8 @@ class Session(object):
         slots = c.contents[3].contents[-2].text.strip().replace('\n\n', '\n')
         self.slots = slots.replace('\n\n', '\n').split('\n')
 
+    # FIXME:don't print from the instance; return a string; maybe
+    #       opt in a formatter?
     def show_slots(self, name):
         # slot generator:
         ##
@@ -105,7 +107,7 @@ class Session(object):
         # the starting date/time/room, i.e. the first string:
         '''
         slots = self.slots
-        gsl = (i for i in slots)
+        gsl = (i for i in slots)  # gsl: generator of slots
         # slot text is pair of time & room-info, with talk title & author:
         for _ in range(len(slots)//2):
             print(f'{next(gsl)}:\n\t{next(gsl)}')
@@ -120,6 +122,9 @@ class Session(object):
             print(f'{self.session}: Session Runner: {self.slots[0]}')
 
 
+# FIXME: be smarter abotu the selection stuff throughout here;
+#        maybe use read in a configuration, and write a setup to generate it;
+#        anyway, something better than this step from a quick-hack...
 def url_select(url, sel='.well'):
     ''' given a url and s selector, return results
     '''
@@ -167,37 +172,16 @@ if __name__ == '__main__':
     #  no need to parameterize this:
     url = opt['<url>'] or "https://us.pycon.org/" + time.strftime('%Y') + "/schedule/sessions/"
     site_sessions = url_select(url)
-    # each volunteer slot w/in a session:
-    ### replacing this muck:
-    '''
-    slots = [s.select('ul li') for s in site_sessions]
-    chairs = runners = 0
-    names = []
-    for s in slots:
-        # s contains at most two <li>'s, i.e. two names
-        #  or "No volunteers..."
-        for e in s:
-            if len(e) < 2: # or 3 - then "No volunteers"
-                continue
-            names.append( e.contents[-1].lstrip(': ').rstrip() )
-            job = e.text[1:]  # contents start w/ "\nSession..."
-            if job.startswith('Session Chair'):
-                chairs += 1
-            elif job.startswith('Session Runner'):
-                runners += 1
-    '''
+    # each volunteer slot w/in a session;
     # Sessions class instance now accumulates
-    # - unique list of names,
+    # - unique list of names, with their session instances
     # - count of chairs
     # - count of runners
     sessions = []
     for s in site_sessions:
         sessions.append(Session(s))
 
-    '''
-    # uniq:
-    names = list(set(names))
-    '''
+    # uniq names:
     names = list(Session.names)  # grab keys from defaultdict into list
     # print names
     if report:
