@@ -32,18 +32,19 @@ import requests
 import sys
 import time
 from docopt import docopt
-from collections import defaultdict
 
 
 class Session(object):
     # class variables:
     ## This gives count of volunteers,
     # and back reference to their assignments
-    names = defaultdict(list)  # list of staff: Session instance
+    names = {}  # dict of staff-name: list of Session instances
     chairs = runners = 0
     errors = 0
     @classmethod
     def add_name(cls, name, self):
+        if not name in cls.names:
+            cls.names[name] = []
         cls.names[name].append(self)
 
     @classmethod
