@@ -68,18 +68,18 @@ class Session(object):
         #-----#
         # get staff names for staff slots
         chair = runner = None
-        jobs = s.select('ul li')
+        jobs = [i.text.strip() for i in s.select('ul li')]
         # at most two entries:
         for e in jobs:
-            if len(e) < 3: # "No Volunteers"
+            if e.startswith('No'): # "No Volunteers"
                 continue
-            staff_name = e.contents[-1].lstrip(': ').rstrip()
-            # collects list of volunteering gigs per person:
+            task, staff_name = e.split(': ')
+            # collect list of volunteering gigs per person:
             self.add_name(staff_name, self)
             # either 'Session Chair' or 'Session Runner'
             # - no other choices at this point;
             # len('Session ') == 8
-            if e.contents[1].text[8:] == 'Chair':
+            if task[8:] == 'Chair':
                 chair = staff_name
                 self.inc_chairs()
             else:
@@ -94,10 +94,8 @@ class Session(object):
         #-----#
         # get slots info for report details,
         #  i.e. room, time, talks
-        # FIXME: too much magic; figure out
-        #   easier to read select() way to get to this
-        slots = c.contents[3].contents[-2].text.strip().replace('\n\n', '\n')
-        self.slots = slots.replace('\n\n', '\n').split('\n')
+        # - a list of string pairs: one for time, one for talk description
+        self.slots = [i.text.strip() for i in c.select('.well table td')]
 
     # FIXME:don't print from the instance; return a string; maybe
     #       opt in a formatter?
@@ -113,6 +111,7 @@ class Session(object):
         for _ in range(len(slots)//2):
             print(f'{next(gsl)}:\n\t{next(gsl)}')
         '''
+        # this assumes talk data is chronologically ordered on web
         role = 'Chair ' if self.chair==name else 'Runner'
         print(f'  {self.session}, {role} starting with:  {self.slots[0]}')
 
