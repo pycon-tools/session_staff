@@ -13,7 +13,7 @@ In the works:
   - [ ] add flag to force update of vcr;
   - [ ] include pycon-year in name (for testing/training dev);
 - [ ] merge master -> branch;
-  - [ ] add formatter abs;  and formatters for existing output(s);
+  - [ ] add formatter abc;  and formatters for existing output(s);
   - [ ] maybe add options to specify what to output;
   - [ ] add some basic output formats (text, json, yaml, csv)
   - [ ] add iCal as a formatter option (for volunteers);
