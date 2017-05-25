@@ -13,10 +13,10 @@ In the works:
   - [ ] add flag to force update of vcr;
   - [ ] include pycon-year in name (for testing/training dev);
 - [ ] merge master -> branch;
-  - [ ] add formatter abc;  and formatters for existing output(s);
-  - [ ] maybe add options to specify what to output;
+  - [ ] add formatter ABC;
+  - [ ] add options to specify output format;
   - [ ] add some basic output formats (text, json, yaml, csv)
   - [ ] add iCal as a formatter option (for volunteers);
-  - [ ] add ability to filter by volunteer name;
-  - [ ] add "None" as user to Session class, to output needs;
+  - [ ] add option to filter by volunteer name;
+  - [ ] add "None" as user to Session class, to output unmet needs;
 - [ ] add some training so code doesn't need to change w/ PyCon years / template changes;
